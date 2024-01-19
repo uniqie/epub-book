@@ -43,12 +43,12 @@ const config = {
     client: {
       progress: true,
       reconnect: 5,
-      webSocketURL: {
-        hostname: "0.0.0.0",
-        pathname: `/proxy/${port}/ws`,
-        port: 80,
-        protocol: "ws",
-      },
+      // webSocketURL: {
+      //   hostname: "0.0.0.0",
+      //   pathname: `/proxy/${port}/ws`,
+      //   port: 80,
+      //   protocol: "ws",
+      // },
     },
   },
   plugins: [
