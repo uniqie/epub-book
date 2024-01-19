@@ -1,3 +1,6 @@
 {
-  "CodeGPT.apiKey": "OpenAI"
+  "CodeGPT.apiKey": "OpenAI",
+  "prettier.semi": false,
+  "prettier.configPath": "./.prettierrc",
+  "reactSnippets.settings.prettierEnabled": false
 }

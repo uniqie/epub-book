@@ -1,13 +1,18 @@
-import { createRoot } from "react-dom/client";
-import { RouterProvider } from "react-router-dom";
+import { createRoot } from "react-dom/client"
+import { RouterProvider } from "react-router-dom"
+import { Theme } from "@radix-ui/themes"
 
-import router from "./routes";
+import router from "./routes"
+import "@radix-ui/themes/styles.css"
 
 function App() {
-  return <RouterProvider router={router}></RouterProvider>;
+  return (
+    <Theme>
+      <RouterProvider router={router}></RouterProvider>
+    </Theme>
+  )
 }
 
+const root = createRoot(document.getElementById("root"))
 
-const root = createRoot(document.getElementById("root"));
-
-root.render(<App />);
+root.render(<App />)

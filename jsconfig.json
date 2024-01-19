@@ -1,28 +1,28 @@
 {
-    "compilerOptions": {
-      "outDir": "./dist",
-      "rootDirs": ["src", "config"],
-      "target": "ES6",
-      "moduleResolution": "node",
-      "jsx": "react",
-      "allowJs": true,
-      "declaration": false,
-      "esModuleInterop": true,
-      "importHelpers": true,
-      "downlevelIteration": true,
-      "sourceMap": true,
-      "baseUrl": "./",
-      "lib": ["ES2016", "DOM"],
-      "paths": {
-        "@pages/*": ["./src/pages/*"],
-      },
-      "allowSyntheticDefaultImports": true,
-      "skipLibCheck": true,
-      "strict": true,
-      "noImplicitAny": true,
-      "resolveJsonModule": true
+  "compilerOptions": {
+    "outDir": "./dist",
+    "rootDirs": ["src", "config"],
+    "target": "ES6",
+    "moduleResolution": "node",
+    "jsx": "react",
+    "allowJs": true,
+    "declaration": false,
+    "esModuleInterop": true,
+    "importHelpers": true,
+    "downlevelIteration": true,
+    "sourceMap": true,
+    "baseUrl": "./",
+    "lib": ["ES2016", "DOM"],
+    "paths": {
+      "@/*": ["./*"],
+      "@pages/*": ["./src/pages/*"]
     },
-    "include": ["src"],
-    "exclude": ["node_modules", "build", ".husky", ".dumi"],
-  }
-  
+    "allowSyntheticDefaultImports": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noImplicitAny": true,
+    "resolveJsonModule": true
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "build", ".husky", ".dumi"]
+}

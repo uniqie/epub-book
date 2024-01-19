@@ -1,5 +1,12 @@
+import { Flex, Text, Button } from "@radix-ui/themes"
+
 function Home() {
-  return <div>11123w12389</div>;
+  return (
+    <Flex direction="column" gap="2">
+      <Text>Hello from Radix Themes :)</Text>
+      <Button>Let's go</Button>
+    </Flex>
+  )
 }
 
-export default Home;
+export default Home
