@@ -1,18 +1,18 @@
 /**
  * @typedef {import('webpack').Configuration} WebpackConfig
  */
-const path = require("path");
-const HtmlWebpackPlugin = require("html-webpack-plugin");
-const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin");
+const path = require("path")
+const HtmlWebpackPlugin = require("html-webpack-plugin")
+const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin")
 
-const port = 3000;
+const port = 3000
 
 /**
  * @type {WebpackConfig}
  */
 const config = {
   entry: {
-    index: "./src/index.js",
+    index: "./src/index.tsx",
   },
   output: {
     // filename: "bundle.js",
@@ -24,8 +24,10 @@ const config = {
   mode: "development",
   resolve: {
     alias: {
+      "@/*": ["./src/*"],
       "@pages": path.resolve(__dirname, "src/pages"),
     },
+    extensions: [".js", ".jsx", ".ts", ".tsx", ".json", ".css", ".scss"],
   },
   devtool: "eval",
   optimization: {
@@ -40,16 +42,6 @@ const config = {
     compress: true,
     port: port,
     watchFiles: ["src/**/*.js"],
-    client: {
-      progress: true,
-      reconnect: 5,
-      // webSocketURL: {
-      //   hostname: "0.0.0.0",
-      //   pathname: `/proxy/${port}/ws`,
-      //   port: 80,
-      //   protocol: "ws",
-      // },
-    },
   },
   plugins: [
     new HtmlWebpackPlugin({
@@ -63,10 +55,10 @@ const config = {
     rules: [
       {
         test: /\.css$/i,
-        use: ['style-loader', 'css-loader'],
+        use: ["style-loader", "css-loader"],
       },
       {
-        test: /\.(?:js|mjs|cjs)$/,
+        test: /\.(?:js|mjs|cjs|ts|tsx)$/,
         exclude: /node_modules/,
         use: {
           loader: "babel-loader",
@@ -80,6 +72,7 @@ const config = {
                   development: process.env.NODE_ENV === "development",
                 },
               ],
+              ["@babel/preset-typescript"],
             ],
             plugins: [require.resolve("react-refresh/babel")],
           },
@@ -87,5 +80,5 @@ const config = {
       },
     ],
   },
-};
-module.exports = config;
+}
+module.exports = config
