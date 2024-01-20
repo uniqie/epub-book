@@ -1,18 +1,16 @@
 import { createRoot } from "react-dom/client"
 import { RouterProvider } from "react-router-dom"
-// import { Theme } from "@radix-ui/themes"
+import { twMerge } from "tailwind-merge"
 
 import router from "./routes"
-// import "@radix-ui/themes/styles.css"
+import "./style/globals.css"
 
 function App() {
-  return (
-    // <Theme>
-      <RouterProvider router={router}></RouterProvider>
-    // </Theme>
-  )
+  return <RouterProvider router={router}></RouterProvider>
 }
 
-const root = createRoot(document.getElementById("root") as HTMLElement)
+const rootEle = document.getElementById("root") as HTMLDivElement
+rootEle.className = twMerge(["h-screen"])
 
+const root = createRoot(rootEle)
 root.render(<App />)

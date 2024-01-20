@@ -24,7 +24,7 @@ const config = {
   mode: "development",
   resolve: {
     alias: {
-      "@/*": ["./src/*"],
+      "@": path.resolve(__dirname, "src"),
       "@pages": path.resolve(__dirname, "src/pages"),
     },
     extensions: [".js", ".jsx", ".ts", ".tsx", ".json", ".css", ".scss"],
@@ -33,15 +33,15 @@ const config = {
   optimization: {
     nodeEnv: "development",
   },
-  watchOptions: {
-    ignored: /node_modules/,
-  },
   devServer: {
-    liveReload: true,
     static: "./dist",
-    compress: true,
     port: port,
-    watchFiles: ["src/**/*.js"],
+    watchFiles: {
+      paths: ["src/**/*.js", "src/**/*.ts", "src/**/*.tsx"],
+      options: {
+        ignored: /node_modules/,
+      },
+    },
   },
   plugins: [
     new HtmlWebpackPlugin({
@@ -55,7 +55,18 @@ const config = {
     rules: [
       {
         test: /\.css$/i,
-        use: ["style-loader", "css-loader"],
+        use: [
+          "style-loader",
+          "css-loader",
+          {
+            loader: "postcss-loader",
+            options: {
+              postcssOptions: {
+                plugins: [require("tailwindcss"), require("autoprefixer")],
+              },
+            },
+          },
+        ],
       },
       {
         test: /\.(?:js|mjs|cjs|ts|tsx)$/,

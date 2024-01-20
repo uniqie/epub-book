@@ -1,7 +1,16 @@
 import { Button } from "@/components/ui/button"
+import { Page } from "@/components/ui/page"
+
+import Reader from "../Reader"
 
 function Home() {
-  return <Button>{123}</Button>
+  return (
+    <Page>
+      <Page.Content className="grid place-content-center">
+        <Reader />
+      </Page.Content>
+    </Page>
+  )
 }
 
 export default Home
