@@ -36,6 +36,7 @@ const config = {
   devServer: {
     static: "./dist",
     port: port,
+    open: true,
     watchFiles: {
       paths: ["src/**/*.js", "src/**/*.ts", "src/**/*.tsx"],
       options: {

@@ -1,5 +1,6 @@
 import { useRef, useState } from "react"
-import ePub from "epubjs"
+import Epub from "epubjs"
+
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 
@@ -17,13 +18,28 @@ function Reader() {
   const render = () => {
     if (path.current) {
       const files = path.current
-      files.item(0)
+      const file = files.item(0)
+      if (file) {
+        const fileReader = new FileReader()
+        fileReader.readAsArrayBuffer(file)
+        fileReader.onload = () => {
+          const bufferData = fileReader.result as ArrayBuffer
+          const book = Epub(bufferData)
+          book.renderTo("book", {  flow: "paginated", width: 600, height: 400 }).display()
+        }
+      } else {
+        throw new Error('book')
+      }
+    } else {
+      throw new Error('cannot get path')
     }
   }
 
   return (
     <>
-      <Button>{"render"}</Button>
+      <Button onClick={render}>
+        {"render"}
+      </Button>
       <Input
         id="file"
         className={cn(["w-fit"])}
@@ -31,6 +47,7 @@ function Reader() {
         type="file"
         onChange={handleValueChange}
       />
+      <div id="book"/>
     </>
   )
 }
