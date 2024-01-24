@@ -1,4 +1,3 @@
-import { Button } from "@/components/ui/button"
 import { Page } from "@/components/ui/page"
 
 import Reader from "../Reader"

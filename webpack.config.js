@@ -4,6 +4,7 @@
 const path = require("path")
 const HtmlWebpackPlugin = require("html-webpack-plugin")
 const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin")
+const ESLintPlugin = require("eslint-webpack-plugin")
 
 const port = 3000
 
@@ -51,6 +52,14 @@ const config = {
       template: "./public/index.html",
     }),
     new ReactRefreshWebpackPlugin(),
+    // TODO: configure eslint
+    new ESLintPlugin({
+      // Plugin options
+      extensions: ["js", "mjs", "jsx", "ts", "tsx"],
+      eslintPath: require.resolve("eslint"),
+      cache: true,
+      resolvePluginsRelativeTo: __dirname,
+    }),
   ],
   module: {
     rules: [
