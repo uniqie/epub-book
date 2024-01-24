@@ -1,4 +1,4 @@
-import { useRef } from "react"
+import React, { useRef } from "react"
 import Epub, { Book, type Rendition } from "epubjs"
 import localforage from "localforage"
 
@@ -6,11 +6,13 @@ import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 
 import { cn } from "@/lib/utils"
+import { unzip } from "@/lib/unzip"
 
 function Reader() {
   const book = useRef<Book>()
   const rendition = useRef<Rendition>()
 
+  // eslint-disable-next-line
   const handleValueChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const bookBufferData = await e.target.files.item(0)?.arrayBuffer()
@@ -42,6 +44,12 @@ function Reader() {
     }
   }
 
+  const _unzip = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      unzip(e.target.files[0])
+    }
+  }
+
   return (
     <>
       <Button onClick={render}>{"render"}</Button>
@@ -50,7 +58,7 @@ function Reader() {
         className={cn(["w-fit"])}
         accept=".epub"
         type="file"
-        onChange={handleValueChange}
+        onChange={_unzip}
       />
       <div id="book" />
     </>
