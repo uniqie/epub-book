@@ -16,7 +16,6 @@ const config = {
     index: "./src/index.tsx",
   },
   output: {
-    // filename: "bundle.js",
     filename: "[name].bundle.js",
     path: path.resolve(__dirname, "dist"),
     clean: true,

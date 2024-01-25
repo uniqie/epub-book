@@ -1,11 +1,17 @@
-import { createBrowserRouter } from "react-router-dom"
+import { createHashRouter } from "react-router-dom"
 
 import Home from "@pages/Home"
+import Example from "@pages/Example"
 
-const router = createBrowserRouter([
+const router = createHashRouter([
   {
-    path: "/",
+    path: "/home",
     element: <Home />,
+    children: [],
+  },
+  {
+    path: "/example",
+    element: <Example />,
   },
 ])
 

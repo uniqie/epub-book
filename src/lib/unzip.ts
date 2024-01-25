@@ -5,8 +5,6 @@ export async function unzip(data: File) {
 
   const entries = await new ZipReader(zipFileReader).getEntries()
 
-  console.log("entries", entries)
-
   if (entries.length > 0) {
     const writer = new TextWriter()
 

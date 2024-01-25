@@ -1,7 +1,12 @@
-const express = require("express");
-const webpack = require("webpack");
-const webpackConfig = require("../webpack.config");
-const compiler = webpack(webpackConfig);
+const webpack = require("webpack")
+const WebpackDevServer = require("webpack-dev-server")
 
-const app = express();
-app.use(require("webpack-hot-middleware")(compiler));
+const webpackConfig = require("../webpack.config")
+const compiler = webpack(webpackConfig)
+
+
+
+const app = new WebpackDevServer(compiler)
+
+
+app.use()
