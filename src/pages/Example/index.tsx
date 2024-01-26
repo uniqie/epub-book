@@ -11,6 +11,36 @@ import {
   TableRow,
 } from "@/components/ui/table"
 
+import DataTable, { ColumnsType } from "@/components/DataTable"
+
+const testColumns: ColumnsType = [
+  {
+    title: "name",
+    code: "name",
+    headAttributes: { className: "text-center", rowSpan: 2, colSpan: 2 },
+  },
+  {
+    title: "location",
+    code: "location",
+    headAttributes: { className: "text-center", colSpan: 2 },
+    children: [
+      {
+        title: "demo1",
+        code: "demo1",
+      },
+      {
+        title: "demo2",
+        code: "demo2",
+      },
+    ],
+  },
+  {
+    title: "pag",
+    code: "pag",
+    headAttributes: { className: "text-center", rowSpan: 2 },
+  },
+]
+
 function Example(): React.ReactElement {
   return (
     <Page>
@@ -23,24 +53,7 @@ function Example(): React.ReactElement {
         </CardContent>
       </Card>
       <Card className="mt-12 mx-10">
-        <Table>
-          <TableHeader>
-            <TableRow>
-              <TableHead>a</TableHead>
-              <TableHead>b</TableHead>
-              <TableHead>c</TableHead>
-              <TableHead>d</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            <TableRow>
-              <TableCell>1</TableCell>
-              <TableCell>2</TableCell>
-              <TableCell>3</TableCell>
-              <TableCell>4</TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
+        <DataTable columns={testColumns} />
       </Card>
     </Page>
   )
