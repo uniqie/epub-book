@@ -17,12 +17,30 @@ const testColumns: ColumnsType = [
   {
     title: "name",
     code: "name",
-    headAttributes: { className: "text-center", rowSpan: 2, colSpan: 2 },
+    children: [
+      {
+        title: "A",
+        code: "A",
+        children: [
+          {
+            title: "demo1",
+            code: "demo1",
+          },
+          {
+            title: "demo2",
+            code: "demo2",
+          },
+        ],
+      },
+      {
+        title: "B",
+        code: "B",
+      },
+    ],
   },
   {
     title: "location",
     code: "location",
-    headAttributes: { className: "text-center", colSpan: 2 },
     children: [
       {
         title: "demo1",
@@ -37,7 +55,6 @@ const testColumns: ColumnsType = [
   {
     title: "pag",
     code: "pag",
-    headAttributes: { className: "text-center", rowSpan: 2 },
   },
 ]
 
