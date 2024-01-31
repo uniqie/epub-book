@@ -13,6 +13,9 @@ import {
 
 import DataTable, { ColumnsType } from "@/components/DataTable"
 
+type Temp = typeof demoData
+
+
 const testColumns: ColumnsType = [
   {
     title: "name",
@@ -58,6 +61,12 @@ const testColumns: ColumnsType = [
   },
 ]
 
+const demoData = [
+  { demo1: 13, demo2: 14, B: 123, pag: "123" },
+  { demo1: 13, demo2: 14, B: 123, pag: "456" },
+  { demo1: 13, demo2: 14, B: 123, pag: "123" },
+] as any[]
+
 function Example(): React.ReactElement {
   return (
     <Page>
@@ -70,7 +79,7 @@ function Example(): React.ReactElement {
         </CardContent>
       </Card>
       <Card className="mt-12 mx-10">
-        <DataTable columns={testColumns} />
+        <DataTable caption="Table" columns={testColumns} data={demoData} />
       </Card>
     </Page>
   )

@@ -1,8 +1,4 @@
-import {
-  ReactElement,
-  TdHTMLAttributes,
-  useMemo,
-} from "react"
+import { ReactElement, TdHTMLAttributes, useMemo } from "react"
 import {
   Table,
   TableHead,
@@ -13,37 +9,37 @@ import {
   TableCell,
 } from "../ui/table"
 
-type RenderType = () => ReactElement | HTMLElement
+type RenderType<T> = (row: T) => ReactElement | HTMLElement
 type headAttributes = TdHTMLAttributes<HTMLTableCellElement>
 
-type ColumnType = {
+type ColumnType<T> = {
   title?: string
   code: string
   headAttributes?: headAttributes
-  render?: RenderType
-  children?: ColumnsType
+  render?: RenderType<T>
+  children?: ColumnsType<T>
 }
 
-type ColumnsType = Array<ColumnType>
+type ColumnsType<T> = Array<ColumnType<T>>
 
-type DataTableType = {
-  caption: string
-  columns: ColumnsType
+type DataTableType<T extends Object> = {
+  caption?: string
+  columns: ColumnsType<T>
   defaultColumnAttributes?: headAttributes
-  data?: Object[]
+  data: T[]
 }
 
-type HeadCellType = Exclude<ColumnType, "children"> & {
+type HeadCellType<T> = Exclude<ColumnType<T>, "children"> & {
   _depth?: number
 }
 
-type HeadRowType = Array<HeadCellType>
+type HeadRowType<T> = Array<HeadCellType<T>>
 
-function deepSearchColumn2(
-  column: ColumnType,
+function deepSearchColumn2<T>(
+  column: ColumnType<T>,
   depth: number,
-  list: Array<HeadCellType[]>,
-  endColumns: Array<HeadCellType>
+  list: Array<HeadCellType<T>[]>,
+  endColumns: Array<HeadCellType<T>>
 ) {
   const { children, ...newColumn } = column
   if (list[depth]) {
@@ -57,13 +53,15 @@ function deepSearchColumn2(
       deepSearchColumn2(subColumn, depth + 1, list, endColumns)
     )
   } else {
-    const endColumn = newColumn as HeadCellType
+    const endColumn = newColumn as HeadCellType<T>
     endColumn._depth = depth
     endColumns.push(endColumn)
   }
 }
 
-function DataTable(props: React.PropsWithoutRef<DataTableType>) {
+function DataTable<T extends Object>(
+  props: React.PropsWithoutRef<DataTableType<T>>
+) {
   const {
     caption,
     columns,
@@ -74,17 +72,17 @@ function DataTable(props: React.PropsWithoutRef<DataTableType>) {
   } = props
 
   const [headRows, endColumns] = useMemo(() => {
-    const arr = [] as Array<HeadRowType>
+    const arr = [] as Array<HeadRowType<T>>
 
     let point = 0
-    const temp = [] as Array<Array<HeadCellType[]>>
+    const temp = [] as Array<Array<HeadCellType<T>[]>>
 
     // 尾节点
-    const endColumns = [] as Array<HeadCellType>
+    const endColumns = [] as Array<HeadCellType<T>>
 
     columns.forEach((column) => {
-      const list = [] as Array<HeadCellType[]>
-      deepSearchColumn2(column, 0, list, endColumns)
+      const list = [] as Array<HeadCellType<T>[]>
+      deepSearchColumn2<T>(column, 0, list, endColumns)
       const maxColspan = list[list.length - 1].length * list.length
       temp.push(list)
       list.forEach((item, depth) => {
@@ -139,11 +137,17 @@ function DataTable(props: React.PropsWithoutRef<DataTableType>) {
       </TableHeader>
       <TableBody>
         {Array.isArray(data) &&
-          data.map((d, idx) => {
+          data.map((d: any, idx) => {
             return (
               <TableRow key={idx}>
-                {endColumns.map((column) => {
-                  return <TableCell></TableCell>
+                {endColumns.map((column, code) => {
+                  const { rowSpan, ...other } = column.headAttributes || {}
+
+                  return (
+                    <TableCell {...other} key={code}>
+                      {column.render ? column.render(d) : d[column.code]}
+                    </TableCell>
+                  )
                 })}
               </TableRow>
             )
