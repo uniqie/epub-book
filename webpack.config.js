@@ -83,6 +83,7 @@ const config = {
         use: {
           loader: "babel-loader",
           options: {
+            // transform: {},
             presets: [
               ["@babel/preset-env", { targets: "defaults" }],
               [

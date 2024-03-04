@@ -2,21 +2,10 @@ import React from "react"
 import { Page } from "@/components/ui/page"
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
 
-import DataTable, { ColumnsType } from "@/components/DataTable"
+import DataTable from "@/components/DataTable"
 
-type Temp = typeof demoData
-
-
-const testColumns: ColumnsType = [
+const testColumns = [
   {
     title: "name",
     code: "name",
@@ -28,6 +17,7 @@ const testColumns: ColumnsType = [
           {
             title: "demo1",
             code: "demo1",
+            render: () => <div>***</div>,
           },
           {
             title: "demo2",
