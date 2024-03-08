@@ -19,6 +19,6 @@
     "noImplicitAny": true,
     "resolveJsonModule": true
   },
-  "include": ["src", "tests"],
+  "include": ["src", "tests", "**/*.tsx", "**/*.tsx"],
   "exclude": ["node_modules", "build", ".husky", ".dumi"]
 }

@@ -1,4 +1,6 @@
 import React from "react"
+import { Outlet } from "react-router-dom"
+
 import { Page } from "@/components/ui/page"
 import { Card, CardHeader, CardContent, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -71,6 +73,7 @@ function Example(): React.ReactElement {
       <Card className="mt-12 mx-10">
         <DataTable caption="Table" columns={testColumns} data={demoData} />
       </Card>
+      <Outlet></Outlet>
     </Page>
   )
 }
