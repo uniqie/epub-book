@@ -1,6 +1,6 @@
-import { ReactElement, TdHTMLAttributes } from "react"
+import { ReactNode, TdHTMLAttributes } from "react"
 
-type RenderType = (row: any) => ReactElement | HTMLElement
+type RenderType<RecordType> = (row: RecordType) => ReactNode
 export type headAttributes = TdHTMLAttributes<HTMLTableCellElement>
 
 /**
@@ -8,23 +8,19 @@ export type headAttributes = TdHTMLAttributes<HTMLTableCellElement>
  */
 export type ColumnType<RecordType> = {
   title?: string // 标题
-  code: string // 唯一code
+  code: keyof RecordType // 唯一code
+  dataIndex?: string // 唯一索引
   headAttributes?: headAttributes // tableCell属性
-  render?: RenderType // 渲染函数
-  children?: ColumnsType<RecordType> // 子标题
+  render?: RenderType<RecordType> // 渲染函数
+  children?: ColumnsType<RecordType> // 子列
 }
 
 export type ColumnsType<RecordType> = ColumnType<RecordType>[]
-
-// export type HeadCellType = Exclude<ColumnType, "children"> & {
-//   _depth?: number
-// }
-
-// export type HeadRowType = Array<HeadCellType>
 
 export type DataTableType<RecordType extends Object> = {
   caption?: string
   columns: ColumnsType<RecordType>
   defaultColumnAttributes?: headAttributes
   data: any[]
+  striped?: boolean
 }

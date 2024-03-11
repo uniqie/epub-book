@@ -10,7 +10,7 @@ export async function unzip(data: File) {
 
     if (entries[4]?.getData) {
       await entries[4].getData(writer)
-      console.log("res", await writer.getData())
+      return await writer.getData()
     }
   }
 }

@@ -1,4 +1,4 @@
-import { expect, jest, test } from "@jest/globals"
+import { expect, test } from "@jest/globals"
 import useColumns from "../hooks/useColumns"
 
 const testColumns = [

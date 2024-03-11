@@ -19,6 +19,7 @@ function DataTable<T extends Object>(
     caption,
     columns,
     data,
+    striped,
     defaultColumnAttributes = {
       className: "text-center border-x border-y border-solid border-slate-200",
     },
@@ -29,8 +30,6 @@ function DataTable<T extends Object>(
     defaultColumnAttributes
   )
 
-  console.log(flatColumns)
-
   return (
     <Table className="table-fixed border-collapse caption-top">
       {caption && (
@@ -39,16 +38,16 @@ function DataTable<T extends Object>(
         </TableCaption>
       )}
 
-      <TableHeader>
+      <TableHeader className="bg-slate-100">
         {flatColumns.length > 0 &&
           flatColumns.map((row, depth) => {
             return (
               <TableRow key={depth}>
-                {row.map((head, idx) => {
+                {row.map((head) => {
                   return (
                     <TableHead
-                      key={head.code || idx}
-                      headers={head.code}
+                      key={head.dataIndex}
+                      headers={head.dataIndex}
                       {...head.headAttributes}
                     >
                       {head.title}
@@ -63,7 +62,7 @@ function DataTable<T extends Object>(
         {Array.isArray(data) &&
           data.map((d: any, idx) => {
             return (
-              <TableRow key={idx}>
+              <TableRow key={idx} className={striped ? "even:bg-gray-50" : ""}>
                 {renderColumns.map((column, code) => {
                   const { rowSpan, ...other } = column.headAttributes || {}
                   return (
