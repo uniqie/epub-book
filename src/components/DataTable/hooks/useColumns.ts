@@ -11,7 +11,10 @@ export default function useColumns<RecordType>(
   columns: ColumnType<RecordType>[],
   defaultColumnAttributes?: headAttributes
 ): [flatColumnsType<RecordType>, renderColumns<RecordType>] {
-  
+  if (!Array.isArray(columns)) {
+    throw new Error("'columns' is invalid")
+  }
+
   // columns层级结构
   const flatColumns: flatColumnsType<RecordType> = []
   // wait render columns
