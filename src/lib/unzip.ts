@@ -1,16 +1,9 @@
-import { BlobReader, ZipReader, TextWriter } from "@zip.js/zip.js"
+import { BlobReader, ZipReader, Entry } from "@zip.js/zip.js"
 
-export async function unzip(data: File) {
+export async function unzip(data: File): Promise<Entry[]> {
   const zipFileReader = new BlobReader(data)
 
   const entries = await new ZipReader(zipFileReader).getEntries()
-
-  if (entries.length > 0) {
-    const writer = new TextWriter()
-
-    if (entries[4]?.getData) {
-      await entries[4].getData(writer)
-      return await writer.getData()
-    }
-  }
+  
+  return entries
 }

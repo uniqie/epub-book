@@ -1,48 +1,32 @@
-import { Input } from "@/components/Epub"
-import { Card, CardContent, CardTitle } from "@/components/ui/card"
-import DataTable, { type ColumnType } from "@/components/DataTable"
 import { useState } from "react"
 
-type BookData = {
-  name: string
-  size: number
-  lastModifiedDate?: Date
-}
+import { Input } from "@/components/Epub"
+import { Card, CardContent, CardTitle } from "@/components/ui/card"
+import DataTable from "@/components/DataTable"
+import { Button } from "@/components/ui/button"
 
-const columns: ColumnType<BookData>[] = [
-  {
-    code: "name",
-    title: "name",
-    dataIndex: "name",
-  },
-  {
-    code: "size",
-    title: "size",
-    dataIndex: "size",
-    render: (row) => {
-      return `${(row.size / 1000 ** 2).toFixed(2)}MB`
-    },
-  },
-  {
-    code: "lastModifiedDate",
-    title: "modifyTime",
-    dataIndex: "lastModifiedDate",
-    // headAttributes: {
-    // },
-    render: (row) => {
-      return row.lastModifiedDate instanceof Date
-        ? row.lastModifiedDate.toLocaleString()
-        : ""
-    },
-  },
-]
+import Book from "@/lib/book"
+import { type BookBrief } from "./interface"
+import { BookShelfColumns, BookDataColumns } from "./configuration"
 
 function EpubInput() {
-  const [data, setData] = useState<BookData[]>([])
+
+  const [books, setBooks] = useState<Book[]>([])
+  const [data, setData] = useState<BookBrief[]>([])
 
   const handleBooksChange = (files: FileList | null) => {
-    console.log(files)
     setData(files ? Array.from(files) : [])
+  }
+
+  const handleUnzip = () => {
+    const books: Book[] = []
+    data.forEach((file) => {
+      books.push(new Book(file as File))
+    })
+    Promise.all(books.map((book) => book.getEntries())).then(() => {
+      setBooks(books)
+      console.log(books)
+    })
   }
 
   return (
@@ -51,13 +35,24 @@ function EpubInput() {
         <CardTitle className="m-4">epub-button</CardTitle>
         <CardContent>
           {data.length > 0 ? (
-            <DataTable columns={columns} data={data} striped />
+            <DataTable columns={BookShelfColumns} data={data} striped />
           ) : (
             <Input onChange={handleBooksChange} />
           )}
         </CardContent>
       </Card>
-      <Card className="m-4"></Card>
+      <Button disabled={!data?.length} onClick={handleUnzip}>
+        unzip
+      </Button>
+
+      <Card className="mt-10">
+        <CardTitle className="m-8">细则</CardTitle>
+        <CardContent>
+          {books[0]?.entries && (
+            <DataTable columns={BookDataColumns} data={books[0].entries} />
+          )}
+        </CardContent>
+      </Card>
     </>
   )
 }

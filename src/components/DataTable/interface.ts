@@ -21,6 +21,6 @@ export type DataTableType<RecordType extends Object> = {
   caption?: string
   columns: ColumnsType<RecordType>
   defaultColumnAttributes?: headAttributes
-  data: any[]
+  data: RecordType[]
   striped?: boolean
 }

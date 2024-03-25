@@ -8,12 +8,14 @@ const ESLintPlugin = require("eslint-webpack-plugin")
 
 const port = 3000
 
+const isDevelopment = process.env.NODE_ENV === "development"
+
 /**
  * @type {WebpackConfig}
  */
 const config = {
   entry: {
-    index: "./src/index.tsx",
+    main: "./src/index.tsx",
   },
   output: {
     filename: "[name].bundle.js",
@@ -29,11 +31,27 @@ const config = {
     },
     extensions: [".js", ".jsx", ".ts", ".tsx", ".json", ".css", ".scss"],
   },
-  devtool: "eval",
+  devtool: "source-map",
   optimization: {
-    nodeEnv: "development",
+    usedExports: true,
+    runtimeChunk: "single",
+    splitChunks: {
+      chunks: "all",
+      cacheGroups: {
+        vendors: {
+          test: /[\\/]node_modules[\\/]/,
+          priority: -10,
+        },
+        default: {
+          minChunks: 2,
+          priority: -20,
+          reuseExistingChunk: true,
+        },
+      },
+    },
   },
   devServer: {
+    hot: true,
     static: "./dist",
     port: port,
     open: true,
@@ -46,7 +64,7 @@ const config = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      chunks: ["app"],
+      // chunks: ["app"],
       title: "epub",
       template: "./public/index.html",
     }),
@@ -90,12 +108,11 @@ const config = {
                 "@babel/preset-react",
                 {
                   runtime: "automatic",
-                  development: process.env.NODE_ENV === "development",
+                  development: isDevelopment,
                 },
               ],
               ["@babel/preset-typescript"],
             ],
-            plugins: [require.resolve("react-refresh/babel")],
           },
         },
       },
