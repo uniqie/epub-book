@@ -51,7 +51,9 @@ const config = {
     },
   },
   devServer: {
-    hot: true,
+    client: {
+      overlay: false,
+    },
     static: "./dist",
     port: port,
     open: true,
@@ -62,22 +64,6 @@ const config = {
       },
     },
   },
-  plugins: [
-    new HtmlWebpackPlugin({
-      // chunks: ["app"],
-      title: "epub",
-      template: "./public/index.html",
-    }),
-    new ReactRefreshWebpackPlugin(),
-    // TODO: configure eslint
-    new ESLintPlugin({
-      // Plugin options
-      extensions: ["js", "mjs", "jsx", "ts", "tsx"],
-      eslintPath: require.resolve("eslint"),
-      cache: true,
-      resolvePluginsRelativeTo: __dirname,
-    }),
-  ],
   module: {
     rules: [
       {
@@ -98,25 +84,57 @@ const config = {
       {
         test: /\.(?:js|mjs|cjs|ts|tsx)$/,
         exclude: /node_modules/,
-        use: {
-          loader: "babel-loader",
-          options: {
-            // transform: {},
-            presets: [
-              ["@babel/preset-env", { targets: "defaults" }],
-              [
-                "@babel/preset-react",
-                {
-                  runtime: "automatic",
-                  development: isDevelopment,
-                },
+        use: [
+          {
+            loader: "babel-loader",
+            options: {
+              // transform: {},
+              presets: [
+                ["@babel/preset-env", { targets: "defaults" }],
+                [
+                  "@babel/preset-react",
+                  {
+                    runtime: "automatic",
+                    development: isDevelopment,
+                  },
+                ],
+                ["@babel/preset-typescript"],
               ],
-              ["@babel/preset-typescript"],
-            ],
+              plugins: [
+                isDevelopment && require.resolve("react-refresh/babel"),
+              ].filter(Boolean),
+            },
           },
-        },
+          // {
+          //   loader: require.resolve("ts-loader"),
+          //   options: {
+          //     getCustomTransformers: () => ({
+          //       before: [isDevelopment && ReactRefreshTypeScript()].filter(
+          //         Boolean
+          //       ),
+          //     }),
+          //     transpileOnly: isDevelopment,
+          //   },
+          // },
+        ],
       },
     ],
   },
+  plugins: [
+    new HtmlWebpackPlugin({
+      // chunks: ["app"],
+      title: "epub",
+      template: "./public/index.html",
+    }),
+    // TODO: configure eslint
+    new ESLintPlugin({
+      // Plugin options
+      extensions: ["js", "mjs", "jsx", "ts", "tsx"],
+      eslintPath: require.resolve("eslint"),
+      cache: true,
+      resolvePluginsRelativeTo: __dirname,
+    }),
+    isDevelopment && new ReactRefreshWebpackPlugin(),
+  ].filter(Boolean),
 }
 module.exports = config

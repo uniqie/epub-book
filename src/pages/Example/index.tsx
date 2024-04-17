@@ -5,7 +5,7 @@ import { Page } from "@/components/ui/page"
 
 function Example(): React.ReactElement {
   return (
-    <Page>
+    <Page className="px-2">
       <Outlet></Outlet>
     </Page>
   )

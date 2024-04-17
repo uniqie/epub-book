@@ -10,7 +10,6 @@ import { type BookBrief } from "./interface"
 import { BookShelfColumns, BookDataColumns } from "./configuration"
 
 function EpubInput() {
-
   const [books, setBooks] = useState<Book[]>([])
   const [data, setData] = useState<BookBrief[]>([])
 
@@ -31,8 +30,8 @@ function EpubInput() {
 
   return (
     <>
-      <Card className="m-4 mt-10 p-2">
-        <CardTitle className="m-4">epub-button</CardTitle>
+      <Card className="my-4 p-2">
+        <CardTitle className="m-4">epub-input</CardTitle>
         <CardContent>
           {data.length > 0 ? (
             <DataTable columns={BookShelfColumns} data={data} striped />
@@ -41,10 +40,10 @@ function EpubInput() {
           )}
         </CardContent>
       </Card>
+      <Input onChange={handleBooksChange} />
       <Button disabled={!data?.length} onClick={handleUnzip}>
         unzip
       </Button>
-
       <Card className="mt-10">
         <CardTitle className="m-8">细则</CardTitle>
         <CardContent>
@@ -55,6 +54,15 @@ function EpubInput() {
       </Card>
     </>
   )
+}
+
+// @ts-ignore
+if (module?.hot) {
+  // @ts-ignore
+  module.hot.accept("./index.tsx", function () {
+    console.log("Accepting the updated printMe module!")
+    // printMe()
+  })
 }
 
 export default EpubInput
