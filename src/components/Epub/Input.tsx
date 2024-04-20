@@ -1,5 +1,4 @@
-import { forwardRef, useImperativeHandle, useRef, useState } from "react"
-// import { unzip } from "@/lib/unzip"
+import { forwardRef, useImperativeHandle, useRef } from "react"
 
 import { Input } from "@/components/ui/input"
 
@@ -16,13 +15,13 @@ const EpubInput = forwardRef<
 >((props, ref) => {
   const { onChange } = props
 
-  const [files, setFiles] = useState<FileList>() // eslint-disable-line
+  // const [files, setFiles] = useState<FileList>() // eslint-disable-line
   const inputRef = useRef<HTMLInputElement>(null)
 
   const handleChange = async (e: React.ChangeEvent) => {
-    if (inputRef.current?.files) {
-      setFiles(inputRef.current.files)
-    }
+    // if (inputRef.current?.files) {
+    //   setFiles(inputRef.current.files)
+    // }
     onChange && onChange(inputRef.current?.files || null)
   }
 

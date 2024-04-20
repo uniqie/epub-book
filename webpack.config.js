@@ -6,10 +6,9 @@ const HtmlWebpackPlugin = require("html-webpack-plugin")
 const ReactRefreshWebpackPlugin = require("@pmmmwh/react-refresh-webpack-plugin")
 const ESLintPlugin = require("eslint-webpack-plugin")
 
-const port = 3000
+const port = 2024
 
 const isDevelopment = process.env.NODE_ENV === "development"
-
 /**
  * @type {WebpackConfig}
  */
@@ -51,18 +50,19 @@ const config = {
     },
   },
   devServer: {
+    hot: true,
     client: {
       overlay: false,
     },
     static: "./dist",
     port: port,
     open: true,
-    watchFiles: {
-      paths: ["src/**/*.js", "src/**/*.ts", "src/**/*.tsx"],
-      options: {
-        ignored: /node_modules/,
-      },
-    },
+    // watchFiles: {
+    //   paths: ["src/**/*.js", "src/**/*.ts", "src/**/*.tsx"],
+    //   options: {
+    //     ignored: /node_modules/,
+    //   },
+    // },
   },
   module: {
     rules: [
@@ -105,17 +105,6 @@ const config = {
               ].filter(Boolean),
             },
           },
-          // {
-          //   loader: require.resolve("ts-loader"),
-          //   options: {
-          //     getCustomTransformers: () => ({
-          //       before: [isDevelopment && ReactRefreshTypeScript()].filter(
-          //         Boolean
-          //       ),
-          //     }),
-          //     transpileOnly: isDevelopment,
-          //   },
-          // },
         ],
       },
     ],

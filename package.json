@@ -5,7 +5,7 @@
   "main": "src/index.tsx",
   "scripts": {
     "build": "webpack",
-    "start": "webpack server",
+    "start": "NODE_ENV=development webpack server",
     "test": "jest"
   },
   "engines": {
@@ -50,6 +50,7 @@
     "cmdk": "^0.2.0",
     "date-fns": "^3.2.0",
     "embla-carousel-react": "^8.0.0-rc19",
+    "fast-xml-parser": "^4.3.6",
     "localforage": "^1.10.0",
     "lucide-react": "^0.312.0",
     "next-themes": "^0.2.1",

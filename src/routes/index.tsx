@@ -9,7 +9,16 @@ const router = createHashRouter([
   {
     path: "/home",
     element: <Home />,
-    children: [],
+    children: [
+      {
+        path: "count",
+        element: <Count />,
+      },
+      {
+        path: "epub",
+        element: <EpubInput />,
+      },
+    ],
   },
   {
     path: "/example",
