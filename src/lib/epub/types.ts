@@ -1,12 +1,10 @@
 import { Entry } from "@zip.js/zip.js"
 
-type RequiredPointTag<T, K> =
-  (
-    {
-      [P in Extract<keyof T, K>]: NonNullable<T[P]>
-    } & {
-      [U in Exclude<keyof T, K>]?: T[U]
-    })
+type RequiredPointTag<T, K> = {
+  [P in Extract<keyof T, K>]: NonNullable<T[P]>
+} & {
+  [U in Exclude<keyof T, K>]?: T[U]
+}
 
 // https://www.dublincore.org/specifications/dublin-core/dcmi-terms/
 export type DCMITypes =
@@ -49,17 +47,47 @@ export type ContainerConfigType = {
   }
 }
 
-type MetaDataRequiredKey = `dc:${"identifier" | "title" | "language"}`
+type MetaDataRequiredKey = "identifier" | "title" | "language"
 
+type HasOtherAttrKey =
+  | "title"
+  | "contributor"
+  | "coverage"
+  | "creator"
+  | "description"
+  | "publisher"
+  | "relation"
+  | "rights"
+  | "subject"
+
+type CommonAttrType = {
+  attr_id?: string
+  "#text"?: string
+}
+
+type OtherAttrType = {
+  attr_dir?: "ltr" | "rtl" | "default"
+  "attr_xml:lang"?: string
+}
 // https://www.w3.org/TR/epub-33/#sec-package-elem
-type MetaDataType = RequiredPointTag<
-  {
-    [P in `dc:${DCMITypes}`]?: string
-  },
-  MetaDataRequiredKey
->
+type MetaDataType = RequiredPointTag<{
+  [P in DCMITypes as `dc:${P}`]?: Array<
+    P extends HasOtherAttrKey ? CommonAttrType & OtherAttrType : CommonAttrType
+  >
+}, `dc:${MetaDataRequiredKey}`> & {
+  meta: Array< CommonAttrType & OtherAttrType & {
+    attr_property: string
+    attr_refines?: string
+    attr_scheme?: string  
+  }>
+  "OPF2 meta"?: any
+  link: Array<{
+    attr_href: string
+    attr_hreflang: string
+  }>
+}
 
-export type         PackageConfigType = {
+export type PackageConfigType = {
   // attributes
   attr_dir?: string
   attr_id?: string

@@ -20,5 +20,7 @@ export async function parseContainer(
 export async function parsePackage(entry:Entry) {
   const packageConfig = await xml.parse(entry, {}) as PackageConfigType
 
-  
+  console.log(packageConfig)
+
+  return packageConfig
 }
