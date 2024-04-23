@@ -1,5 +1,5 @@
 import { Entry } from "@zip.js/zip.js"
-import { ContainerConfigType } from "../types"
+import { ContainerConfigType, PackageConfigType } from "../types"
 import validContainerConfig from "../validator/validContainerConfig"
 import xml from "./xml"
 
@@ -7,7 +7,7 @@ export async function parseContainer(
   entry: Entry
 ): Promise<ContainerConfigType> {
   const config = await xml.parse(entry, {
-    isArray(tagName) {
+    isArray(tagName: string) {
       return ["rootfiles", "links"].includes(tagName)
     },
   })
@@ -17,9 +17,8 @@ export async function parseContainer(
   return config as ContainerConfigType
 }
 
-
 export async function parsePackage(entry:Entry) {
-  const packageConfig = await xml.parse(entry, {})
+  const packageConfig = await xml.parse(entry, {}) as PackageConfigType
 
   
 }

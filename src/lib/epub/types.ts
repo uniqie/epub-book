@@ -1,10 +1,12 @@
 import { Entry } from "@zip.js/zip.js"
 
-type RequiredTag<T, K = keyof T> = K  extends keyof T
-  ? {
-      [P in keyof K as keyof T ]: T[P]
-    }
-  : never
+type RequiredPointTag<T, K> =
+  (
+    {
+      [P in Extract<keyof T, K>]: NonNullable<T[P]>
+    } & {
+      [U in Exclude<keyof T, K>]?: T[U]
+    })
 
 // https://www.dublincore.org/specifications/dublin-core/dcmi-terms/
 export type DCMITypes =
@@ -47,15 +49,17 @@ export type ContainerConfigType = {
   }
 }
 
+type MetaDataRequiredKey = `dc:${"identifier" | "title" | "language"}`
+
 // https://www.w3.org/TR/epub-33/#sec-package-elem
-type MetaDataType = Exclude<
+type MetaDataType = RequiredPointTag<
   {
-    [P in keyof `dc:${DCMITypes}`]?: string
+    [P in `dc:${DCMITypes}`]?: string
   },
-  keyof `dc:${"identifier" | "title" | "language"}`
+  MetaDataRequiredKey
 >
 
-export type PackageConfigType = {
+export type         PackageConfigType = {
   // attributes
   attr_dir?: string
   attr_id?: string
