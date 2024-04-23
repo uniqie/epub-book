@@ -15,9 +15,9 @@ function EpubInput() {
       const books: Book[] = Array.from(files).map(
         (file) => new Book(file, { immediate: true })
       )
-      Promise.all(books.map((book) => book.getEntries())).then(() => {
-        setBooks(books)
-      })
+      // Promise.all(books.map((book) => book.resolveEntries())).then(() => {
+      //   setBooks(books)
+      // })
     }
   }
 
