@@ -1,4 +1,6 @@
 .eslintcache
+*.drawio.bkp
+*.drawio.dtmp
 
 /coverage
 /node_modules
