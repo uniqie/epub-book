@@ -1,13 +1,7 @@
-import { Entry } from "@zip.js/zip.js"
-
-type RequiredPointTag<T, K> = {
-  [P in Extract<keyof T, K>]: NonNullable<T[P]>
-} & {
-  [U in Exclude<keyof T, K>]?: T[U]
-}
+import { RequiredPointTag } from "./typeUtils"
 
 // https://www.dublincore.org/specifications/dublin-core/dcmi-terms/
-export type DCMITypes =
+type DCMITypes =
   | "contributor"
   | "coverage"
   | "creator"
@@ -24,11 +18,7 @@ export type DCMITypes =
   | "title"
   | "type"
 
-export type EntriesObj = {
-  [filename: string]: Entry
-}
-
-export type ContainerConfigType = {
+type ContainerConfigType = {
   container: {
     attr_version: string
     rootfiles: {
@@ -40,9 +30,9 @@ export type ContainerConfigType = {
   }
   links?: {
     link: {
-      href: string
-      rel: string
-      "media-type": string
+      attr_href: string
+      attr_rel: string
+      "attr_media-type"?: string
     }[]
   }
 }
@@ -69,17 +59,26 @@ type OtherAttrType = {
   attr_dir?: "ltr" | "rtl" | "default"
   "attr_xml:lang"?: string
 }
+
 // https://www.w3.org/TR/epub-33/#sec-package-elem
-type MetaDataType = RequiredPointTag<{
-  [P in DCMITypes as `dc:${P}`]?: Array<
-    P extends HasOtherAttrKey ? CommonAttrType & OtherAttrType : CommonAttrType
+type MetaDataType = RequiredPointTag<
+  {
+    [P in DCMITypes as `dc:${P}`]?: Array<
+      P extends HasOtherAttrKey
+        ? CommonAttrType & OtherAttrType
+        : CommonAttrType
+    >
+  },
+  `dc:${MetaDataRequiredKey}`
+> & {
+  meta: Array<
+    CommonAttrType &
+      OtherAttrType & {
+        attr_property: string
+        attr_refines?: string
+        attr_scheme?: string
+      }
   >
-}, `dc:${MetaDataRequiredKey}`> & {
-  meta: Array< CommonAttrType & OtherAttrType & {
-    attr_property: string
-    attr_refines?: string
-    attr_scheme?: string  
-  }>
   "OPF2 meta"?: any
   link: Array<{
     attr_href: string
@@ -87,7 +86,23 @@ type MetaDataType = RequiredPointTag<{
   }>
 }
 
-export type PackageConfigType = {
+// The itemref element identifies an EPUB content document or foreign content document in the default reading order.
+type ItemRefType = {
+  attr_id?: string
+  attr_idref: string
+  attr_linear?: "yes" | "no"
+  attr_properties?: string
+}
+
+type SpineType = {
+  attr_id?: string
+  "attr_page-progression-direction"?: "ltr" | "rtl"
+  attr_toc?: string // Epub2历史遗留
+
+  itemref: Array<ItemRefType>
+}
+
+type PackageConfigType = {
   // attributes
   attr_dir?: string
   attr_id?: string
@@ -95,8 +110,10 @@ export type PackageConfigType = {
   "attr_xml:lang"?: string
   "attr_unique-identifier": string
   attr_version: string
-  metadata: MetaDataType
 
+  metadata: MetaDataType
+  spine: SpineType
+  
   collection?: {
     attr_dir?: string
     attr_id?: string
@@ -104,3 +121,5 @@ export type PackageConfigType = {
     "attr_xml:lang"?: string
   }
 }
+
+export { ContainerConfigType, PackageConfigType }

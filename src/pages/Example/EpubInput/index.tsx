@@ -10,14 +10,15 @@ import Book from "@/lib/book"
 function EpubInput() {
   const [books, setBooks] = useState<Book[]>([])
 
-  const handleBooksChange = (files: FileList | null) => {
+  const handleBooksChange = async (files: FileList | null) => {
     if (files) {
-      const books: Book[] = Array.from(files).map(
-        (file) => new Book(file, { immediate: true })
-      )
-      // Promise.all(books.map((book) => book.resolveEntries())).then(() => {
-      //   setBooks(books)
-      // })
+      for (const file of Array.from(files)) {
+        const book = new Book()
+        await book.load(file)
+        console.log(book)
+        books.push(book)
+      }
+      setBooks(books)
     }
   }
 
@@ -37,7 +38,7 @@ function EpubInput() {
         </CardContent>
       </Card>
 
-      {books.length > 0 && books.map((b) => b.getIntroduction())}
+      {/* {books.length > 0 && books.map((b) => b.getIntroduction())} */}
     </>
   )
 }

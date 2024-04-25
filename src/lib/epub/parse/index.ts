@@ -17,10 +17,7 @@ export async function parseContainer(
   return config as ContainerConfigType
 }
 
-export async function parsePackage(entry:Entry) {
-  const packageConfig = await xml.parse(entry, {}) as PackageConfigType
-
-  console.log(packageConfig)
-
+export async function parsePackage(entry: Entry) {
+  const packageConfig = (await xml.parse(entry, {})) as PackageConfigType
   return packageConfig
 }
