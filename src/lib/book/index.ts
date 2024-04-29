@@ -23,7 +23,6 @@ class Book {
           if (this.epub) {
             parseEpubConfig()
           }
-
           // this.basicInfo = parse
           resolve()
         },
