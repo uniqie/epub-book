@@ -1,4 +1,4 @@
-import { RequiredPointTag } from "./typeUtils"
+import { RequiredPointTag, ArrayOrObj, Attrs } from "./typeUtils"
 
 // https://www.dublincore.org/specifications/dublin-core/dcmi-terms/
 type DCMITypes =
@@ -19,21 +19,22 @@ type DCMITypes =
   | "type"
 
 type ContainerConfigType = {
-  container: {
-    attr_version: string
+  container: Attrs<{
+    version: string
+  }> & {
     rootfiles: {
-      rootfile: {
-        "attr_full-path": string
-        "attr_media-type": string
-      }
+      rootfile: Attrs<{
+        "full-path": string
+        "media-type": string
+      }>
     }[]
   }
   links?: {
-    link: {
-      attr_href: string
-      attr_rel: string
-      "attr_media-type"?: string
-    }[]
+    link: Attrs<{
+      href: string
+      rel: string
+      "media-type"?: string
+    }>[]
   }
 }
 
@@ -50,75 +51,97 @@ type HasOtherAttrKey =
   | "rights"
   | "subject"
 
-type CommonAttrType = {
-  attr_id?: string
-  "#text"?: string
-}
+type CommonTagType = {
+  value?: string
+} & Attrs<{}>
 
-type OtherAttrType = {
-  attr_dir?: "ltr" | "rtl" | "default"
-  "attr_xml:lang"?: string
-}
+type UseAttributeType<T = false> = T extends true
+  ? {
+      id?: string
+      dir?: "ltr" | "rtl" | "default"
+      "xml:lang"?: string
+    }
+  : { id?: string }
 
 // https://www.w3.org/TR/epub-33/#sec-package-elem
-type MetaDataType = RequiredPointTag<
+export type MetaDataType = RequiredPointTag<
   {
-    [P in DCMITypes as `dc:${P}`]?: Array<
-      P extends HasOtherAttrKey
-        ? CommonAttrType & OtherAttrType
-        : CommonAttrType
+    [P in DCMITypes as `${P}`]?: ArrayOrObj<
+      CommonTagType &
+        (P extends HasOtherAttrKey
+          ? Attrs<UseAttributeType<true>>
+          : Attrs<UseAttributeType>)
     >
   },
-  `dc:${MetaDataRequiredKey}`
+  `${MetaDataRequiredKey}`
 > & {
-  meta: Array<
-    CommonAttrType &
-      OtherAttrType & {
-        attr_property: string
-        attr_refines?: string
-        attr_scheme?: string
-      }
+  meta: ArrayOrObj<
+    CommonTagType &
+      Attrs<
+        UseAttributeType<true> & {
+          property: string
+          refines?: string
+          scheme?: string
+        }
+      >
   >
   "OPF2 meta"?: any
-  link: Array<{
-    attr_href: string
-    attr_hreflang: string
-  }>
+  link: ArrayOrObj<
+    Attrs<{
+      href: string
+      hreflang: string
+    }>
+  >
 }
 
 // The itemref element identifies an EPUB content document or foreign content document in the default reading order.
-type ItemRefType = {
-  attr_id?: string
-  attr_idref: string
-  attr_linear?: "yes" | "no"
-  attr_properties?: string
+type ItemRefType = Attrs<{
+  id?: string
+  idref: string
+  linear?: "yes" | "no"
+  properties?: string
+}>
+
+type SpineType = Attrs<{
+  id?: string
+  "page-progression-direction"?: "ltr" | "rtl"
+  toc?: string // Epub2历史遗留
+}> & {
+  itemref: ArrayOrObj<ItemRefType>
 }
 
-type SpineType = {
-  attr_id?: string
-  "attr_page-progression-direction"?: "ltr" | "rtl"
-  attr_toc?: string // Epub2历史遗留
-
-  itemref: Array<ItemRefType>
+type ManiFestType = {
+  item: ArrayOrObj<
+    Attrs<{
+      id: string
+      href: string
+      "media-type": string
+      "media-overlay"?: string
+      properties?: string
+    }>
+  >
 }
 
 type PackageConfigType = {
-  // attributes
-  attr_dir?: string
-  attr_id?: string
-  attr_prefix?: string
-  "attr_xml:lang"?: string
-  "attr_unique-identifier": string
-  attr_version: string
+  package: Attrs<{
+    // attributes
+    dir?: string
+    id?: string
+    prefix?: string
+    "xml:lang"?: string
+    "unique-identifier": string
+    version: string
+  }> & {
+    metadata: MetaDataType
+    spine: SpineType
+    manifest: ManiFestType
 
-  metadata: MetaDataType
-  spine: SpineType
-  
-  collection?: {
-    attr_dir?: string
-    attr_id?: string
-    attr_role: string
-    "attr_xml:lang"?: string
+    collection?: Attrs<{
+      dir?: string
+      id?: string
+      role: string
+      "xml:lang"?: string
+    }>
   }
 }
 

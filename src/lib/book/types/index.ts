@@ -5,8 +5,10 @@ export type InitBookOptions = {
 }
 
 export type BookBasicInfoType = {
-  id: string | number
+  identifier: string
   name?: string
   author?: string[]
   language?: string
+  
+  cover?: string
 }

@@ -4,7 +4,11 @@ import { XMLParser, X2jOptions } from "fast-xml-parser"
 
 const defaultOption = Object.freeze({
   ignoreAttributes: false,
-  attributeNamePrefix: "attr_",
+  textNodeName: "value",
+  htmlEntities: true,
+  removeNSPrefix: true,
+  attributesGroupName: "attrs",
+  attributeNamePrefix: "",
 })
 
 const defaultParser = new XMLParser(defaultOption)

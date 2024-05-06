@@ -1,4 +1,4 @@
-import Epub from "../epub"
+import Epub from "@/lib/epub"
 
 import { parseEpubConfig } from "./parse"
 import { InitBookOptions, BookBasicInfoType } from "./types"
@@ -21,9 +21,8 @@ class Book {
       this.epub = new Epub(file, {
         onSuccess: () => {
           if (this.epub) {
-            parseEpubConfig()
+            this.basicInfo = parseEpubConfig(this.epub)
           }
-          // this.basicInfo = parse
           resolve()
         },
         onFailed: (err) => {
