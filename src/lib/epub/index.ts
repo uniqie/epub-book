@@ -47,7 +47,7 @@ class Epub {
         if (!this.entriesObj["META-INF/container.xml"]) {
           throw new Error(
             "META-INF/container.xml didn't exist, invalid epub format"
-          )
+          ) 
         }
         return parseContainer(this.entriesObj["META-INF/container.xml"])
       })
@@ -74,7 +74,6 @@ class Epub {
       .catch((error) => {
         this._updateLoadStatus("failed")
         hooks?.onFailed && hooks.onFailed(error)
-        // throw error
       })
       .finally(() => {
         hooks?.onFinished &&
