@@ -13,6 +13,8 @@ import {
 import getAttribute from "./utils/getAttribute"
 
 class Epub {
+  private file: File
+  private hooks?: AsyncOperationHooksType
   private containerConfig?: ContainerConfigType
   private packageConfig?: PackageConfigType
 
@@ -21,15 +23,24 @@ class Epub {
   public loadStatus: LoadStatusType
 
   constructor(file: File, hooks?: AsyncOperationHooksType) {
+    this.file = file
+    this.hooks = hooks
     this.entriesObj = {}
     this.loadStatus = "loading"
 
-    /**
-     * 解压 -> 生成entriesObj
-     * entriesObj["META-INF/container.xml"] -> 生成containerConfig，获得packagePath
-     * packagePath -> 获得packageConfig
-     * 处理回调钩子
-     */
+    this.build()
+  }
+
+  /**
+   * 解压 -> 生成entriesObj
+   * entriesObj["META-INF/container.xml"] -> 生成containerConfig，获得packagePath
+   * packagePath -> 获得packageConfig
+   * 处理回调钩子
+   */
+  build() {
+    const file = this.file
+    const hooks = this.hooks
+
     unzip(file)
       .then((entries) => {
         this.entriesObj = convertArrToObj(entries, "filename")
@@ -57,11 +68,11 @@ class Epub {
       })
       .then((packageConfig) => {
         this.packageConfig = packageConfig
-        this.loadStatus = "success"
+        this._updateLoadStatus("success")
         hooks?.onSuccess && hooks.onSuccess()
       })
       .catch((error) => {
-        this.loadStatus = "failed"
+        this._updateLoadStatus("failed")
         hooks?.onFailed && hooks.onFailed(error)
         // throw error
       })
@@ -71,6 +82,10 @@ class Epub {
             this.loadStatus as Exclude<LoadStatusType, "loading">
           )
       })
+  }
+
+  _updateLoadStatus(status: LoadStatusType) {
+    this.loadStatus = status
   }
 
   getConfig() {
