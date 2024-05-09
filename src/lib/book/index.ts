@@ -8,7 +8,7 @@ class Book {
   private options?: InitBookOptions
   private filename?: string
 
-  private basicInfo?: BookBasicInfoType
+  public basicInfo?: BookBasicInfoType
 
   constructor(options?: InitBookOptions) {
     this.options = options
@@ -19,9 +19,9 @@ class Book {
     this.filename = file.name
     return new Promise<void>((resolve, reject) => {
       this.epub = new Epub(file, {
-        onSuccess: () => {
+        onSuccess: async() => {
           if (this.epub) {
-            this.basicInfo = parseEpubConfig(this.epub)
+            this.basicInfo = await parseEpubConfig(this.epub)
           }
           resolve()
         },

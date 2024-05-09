@@ -46,12 +46,14 @@ class Epub {
           this.containerConfig.container.rootfiles[0].rootfile,
           "full-path"
         )
-        this.packageRootPath = packagePath?.replace(/\/.*\.opf/, "")
+        this.packageRootPath = packagePath?.includes("/")
+          ? packagePath?.replace(/\/.*\.opf/, "")
+          : ""
+
         if (!packagePath || !this.entriesObj[packagePath]) {
           throw new Error(`${packagePath} didn't exist, failed to parse`)
         }
         return parsePackage(this.entriesObj[packagePath])
-        
       })
       .then((packageConfig) => {
         this.packageConfig = packageConfig

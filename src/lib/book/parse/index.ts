@@ -7,7 +7,7 @@ import { BookBasicInfoType } from "../types"
 
 export function parseOptions(params: any) {}
 
-export function parseEpubConfig(epub: Epub): BookBasicInfoType {
+export async function parseEpubConfig(epub: Epub): Promise<BookBasicInfoType> {
   const { packageConfig } = epub.getConfig()
 
   if (packageConfig) {
@@ -17,8 +17,8 @@ export function parseEpubConfig(epub: Epub): BookBasicInfoType {
       identifier: convertArrOrObjToArr(metadata["identifier"])[0]?.value || "",
     }
     const attrNames = Object.keys(metadata)
-    
-    attrNames.forEach(async (attrName) => {
+
+    for (const attrName of attrNames) {
       const name = attrName as keyof MetaDataType
       switch (name) {
         case "title":
@@ -43,8 +43,9 @@ export function parseEpubConfig(epub: Epub): BookBasicInfoType {
           const coverItem = convertArrOrObjToArr(manifest.item).find(
             (item) => item.attrs.id === coverId
           )
-          const coverPosition =
-            epub.packageRootPath + "/" + coverItem?.attrs.href
+          const coverPosition = `${epub.packageRootPath}${
+            epub.packageRootPath ? "/" : ""
+          }${coverItem?.attrs.href}`
 
           if (coverPosition && epub.entriesObj[coverPosition]) {
             basicInfo.cover = await getBase64(
@@ -56,7 +57,7 @@ export function parseEpubConfig(epub: Epub): BookBasicInfoType {
         default:
           break
       }
-    })
+    }
     return basicInfo
   } else {
     throw new Error("failed parse packageConfig ")

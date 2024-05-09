@@ -12,15 +12,17 @@ function EpubInput() {
 
   const handleBooksChange = async (files: FileList | null) => {
     if (files) {
+      const books = []
       for (const file of Array.from(files)) {
         const book = new Book()
         await book.load(file)
-        console.log(book)
         books.push(book)
       }
-      setBooks(books)
+      setBooks([...books])
     }
   }
+
+  console.log(books)
 
   return (
     <>
@@ -38,7 +40,15 @@ function EpubInput() {
         </CardContent>
       </Card>
 
-      {/* {books.length > 0 && books.map((b) => b.getIntroduction())} */}
+      {books.length > 0 &&
+        books.map((book, idx) => {
+          return (
+            <div key={book.basicInfo?.identifier || idx}>
+              <div>{book.basicInfo?.name}</div>
+              <img src={book.basicInfo?.cover} alt="cover"></img>
+            </div>
+          )
+        })}
     </>
   )
 }
