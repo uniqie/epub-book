@@ -43,7 +43,7 @@ function EpubInput() {
       {books.length > 0 &&
         books.map((book, idx) => {
           return (
-            <div key={book.basicInfo?.identifier || idx}>
+            <div key={idx}>
               <div>{book.basicInfo?.name}</div>
               <img src={book.basicInfo?.cover} alt="cover"></img>
             </div>
