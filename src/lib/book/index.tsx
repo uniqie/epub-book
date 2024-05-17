@@ -2,6 +2,7 @@ import Epub from "@/lib/epub"
 
 import { parseEpubConfig } from "./parse"
 import { InitBookOptions, BookBasicInfoType } from "./types"
+import Main from "./components/Main"
 
 class Book {
   private epub?: Epub
@@ -19,7 +20,7 @@ class Book {
     this.filename = file.name
     return new Promise<void>((resolve, reject) => {
       this.epub = new Epub(file, {
-        onSuccess: async() => {
+        onSuccess: async () => {
           if (this.epub) {
             this.basicInfo = await parseEpubConfig(this.epub)
           }
@@ -33,9 +34,12 @@ class Book {
     })
   }
 
-  
-
-
+  render() {
+    if (!this.epub) {
+      throw new Error("file is loading, it's wrong time to render")
+    }
+    return <Main epub={this.epub}></Main>
+  }
 }
 
 export default Book

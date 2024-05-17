@@ -56,13 +56,7 @@ const config = {
     },
     static: "./dist",
     port: port,
-    open: true,
-    // watchFiles: {
-    //   paths: ["src/**/*.js", "src/**/*.ts", "src/**/*.tsx"],
-    //   options: {
-    //     ignored: /node_modules/,
-    //   },
-    // },
+    open: "/#/home/epub",
   },
   module: {
     rules: [
@@ -111,7 +105,6 @@ const config = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      // chunks: ["app"],
       title: "epub",
       template: "./public/index.html",
     }),

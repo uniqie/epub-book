@@ -20,4 +20,17 @@ export type AsyncOperationHooksType = {
   onFailed?: (err?: Error) => void
 }
 
+export type DataType = {
+  manifest: Array<{
+    href: string
+    id: string
+    "media-type": string
+  }>
+  spine: Array<{
+    href: string
+    id: string
+    "media-type": string
+  }>
+}
+
 export type LoadStatusType = "loading" | "success" | "failed"

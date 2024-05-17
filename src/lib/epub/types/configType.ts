@@ -110,7 +110,7 @@ type SpineType = Attrs<{
   itemref: ArrayOrObj<ItemRefType>
 }
 
-type ManiFestType = {
+type ManifestType = {
   item: ArrayOrObj<
     Attrs<{
       id: string
@@ -134,7 +134,7 @@ type PackageConfigType = {
   }> & {
     metadata: MetaDataType
     spine: SpineType
-    manifest: ManiFestType
+    manifest: ManifestType
 
     collection?: Attrs<{
       dir?: string

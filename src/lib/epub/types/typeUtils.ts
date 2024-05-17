@@ -24,3 +24,7 @@ export type Attribute<T> = RequiredPointTag<
 >
 
 export type ArrayOrObj<T> = T[] | T
+
+export type ObjectNonNullable<T> = {
+  [P in keyof T & string]: NonNullable<T[P]>
+}

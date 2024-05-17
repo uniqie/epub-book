@@ -40,15 +40,7 @@ function EpubInput() {
         </CardContent>
       </Card>
 
-      {books.length > 0 &&
-        books.map((book, idx) => {
-          return (
-            <div key={idx}>
-              <div>{book.basicInfo?.name}</div>
-              <img src={book.basicInfo?.cover} alt="cover"></img>
-            </div>
-          )
-        })}
+      {books.length > 0 && books.map((book, idx) => book.render())}
     </>
   )
 }

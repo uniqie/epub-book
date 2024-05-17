@@ -8,7 +8,9 @@ import {
 
 export async function unzip(data: File): Promise<Entry[]> {
   const zipFileReader = new BlobReader(data)
-  const entries = await new ZipReader(zipFileReader).getEntries()
+  const entries = await new ZipReader(zipFileReader, {
+    filenameEncoding: "utf-8",
+  }).getEntries()
   return entries
 }
 
