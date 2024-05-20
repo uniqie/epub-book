@@ -10,6 +10,7 @@ export interface Content {
   theme?: ThemeType
   data: {
     entriesObj: EntriesObjType
+    rootPath?: string
   }
 }
 

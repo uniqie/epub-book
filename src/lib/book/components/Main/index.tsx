@@ -3,6 +3,8 @@ import Epub from "@/lib/epub"
 
 import Frame from "../Frame"
 
+
+
 import {
   ContentContextProvider,
   Content,
@@ -22,15 +24,15 @@ function Main(props: MainProps) {
     <ContentContextProvider
       content={{
         theme: themeConfig,
-        data: { entriesObj: epub.entriesObj },
+        data: { entriesObj: epub.entriesObj, rootPath: epub.packageRootPath },
       }}
     >
       <div
         className="absolute z-10 w-full h-full bg-white overflow-x-scroll "
         style={{ columnCount: 2 }}
       >
-        {epub.getData().spine.map((spine) => {
-          return <Frame item={spine} />
+        {epub.getData().spine.map((spine, idx) => {
+          return <Frame item={spine} key={idx} />
         })}
       </div>
     </ContentContextProvider>
