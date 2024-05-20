@@ -1,6 +1,6 @@
 import { useContext, useEffect, useRef } from "react"
 import { createPortal } from "react-dom"
-import { BlobWriter, TextWriter } from "@zip.js/zip.js"
+import { BlobWriter } from "@zip.js/zip.js"
 import styled from "styled-components"
 
 import { ContentContext } from "../../config/ContentContext"
@@ -49,8 +49,8 @@ const Frame = (props: FramePropsType) => {
 
   const replaceLink = () => {
     if (frameRef.current) {
-      const elements =
-        frameRef.current?.contentWindow?.document.querySelectorAll("img[src]")
+      const frameDocument = frameRef.current?.contentWindow?.document
+      const elements = frameDocument?.querySelectorAll("img[src] image")
       elements?.forEach((ele) => {
         const href = ele.getAttribute("src")
         const link =
@@ -69,13 +69,42 @@ const Frame = (props: FramePropsType) => {
           })
         }
       })
+      if (frameDocument) {
+        const styleEle = frameDocument.createElement("style")
+        styleEle.innerHTML = `
+          body: {
+            width:${document.documentElement.clientWidth}px
+            height: ${document.documentElement.clientHeight}px;
+            columnWidth: ${document.documentElement.clientWidth / 2}px;
+          }
+        `
+        frameDocument.body.style.height = `${document.documentElement.clientHeight}px`
+        frameDocument.head.appendChild(styleEle)
+
+        setTimeout(() => {
+          if (frameRef.current) {
+            frameRef.current.width =
+              String(frameDocument.body.scrollWidth) || ""
+          }
+        }, 0)
+
+        // frameDocument.documentElement.style.width = String(
+        //   document.documentElement.clientWidth
+        // )
+        // String(frameDocument.body.scrollWidth) || ""
+        // frameDocument.body.style.width =
+        //   String(frameDocument.body.scrollWidth) || ""
+        // frameRef.current.height = String(frameDocument.body.clientHeight) || ""
+      }
     }
   }
 
   const children = (
     <CustomIframe
-      className="w-full overflow-x-scroll"
-      style={{  height: 'fit-content' }}
+      className="w-full h-screen"
+      // style={{
+      //   columnCount: "2",
+      // }}
       title={item.id}
       ref={frameRef}
       onLoad={replaceLink}
