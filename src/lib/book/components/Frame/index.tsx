@@ -72,13 +72,33 @@ const Frame = (props: FramePropsType) => {
       if (frameDocument) {
         const styleEle = frameDocument.createElement("style")
         styleEle.innerHTML = `
-          body: {
-            width:${document.documentElement.clientWidth}px
-            height: ${document.documentElement.clientHeight}px;
-            columnWidth: ${document.documentElement.clientWidth / 2}px;
+          html, body {
+            margin: 0;
+            box-sizing: border-box;
+            max-width: 100% !important;
+            overflow: hidden;
+            white-space: wrap;
+          }
+          
+          image, img  {
+            width: 200px  !important;
+            height: 200px  !important;
+          }
+
+          svg  {
+            width: 300px !important;
+            height: 300px !important;
+          }
+
+          body {
+            width: 100vw;
+            height: 100vh;
+            column-count: 2;
+            
+            column-fill: auto;
+            column-rule: dotted;
           }
         `
-        frameDocument.body.style.height = `${document.documentElement.clientHeight}px`
         frameDocument.head.appendChild(styleEle)
 
         setTimeout(() => {
@@ -94,17 +114,13 @@ const Frame = (props: FramePropsType) => {
         // String(frameDocument.body.scrollWidth) || ""
         // frameDocument.body.style.width =
         //   String(frameDocument.body.scrollWidth) || ""
-        // frameRef.current.height = String(frameDocument.body.clientHeight) || ""
       }
     }
   }
 
   const children = (
     <CustomIframe
-      className="w-full h-screen"
-      // style={{
-      //   columnCount: "2",
-      // }}
+      className="block w-full h-screen shrink-0"
       title={item.id}
       ref={frameRef}
       onLoad={replaceLink}
