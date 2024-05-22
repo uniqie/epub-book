@@ -21,6 +21,19 @@ const CustomIframe = styled.iframe`
   }
 `
 
+let linkUrl: string
+
+const css = `
+    :root {
+      --primary-color: blue;
+    }  
+  `
+const blob = new Blob([css])
+const file = new File([blob], "style.css", {
+  type: "text/css",
+})
+linkUrl = URL.createObjectURL(file)
+
 const Frame = (props: FramePropsType) => {
   const { portal, item } = props
   const frameRef = useRef<HTMLIFrameElement>(null)
@@ -40,23 +53,26 @@ const Frame = (props: FramePropsType) => {
             type: item["media-type"],
           })
           const blobUrl = URL.createObjectURL(file)
-          frameRef.current.setAttribute("src", URL.createObjectURL(file))
+          frameRef.current.setAttribute("src", blobUrl)
           URL.revokeObjectURL(blobUrl)
         }
       })
     }
   }, [item, entriesObj])
 
-  const replaceLink = () => {
+  const init = () => {
+    _initPage()
+  }
+
+  const _initPage = () => {
     if (frameRef.current) {
-      const frameDocument = frameRef.current?.contentWindow?.document
-      const elements = frameDocument?.querySelectorAll("img[src] image")
+      const frameDocument = frameRef.current.contentDocument
+      const elements = frameDocument?.querySelectorAll("img[src]")
       elements?.forEach((ele) => {
         const href = ele.getAttribute("src")
-        const link =
-          rootPath && href?.startsWith(rootPath)
-            ? rootPath
-            : `${rootPath}/${href}`
+        const baseUrl = new URL(window.location.origin)
+        const link = new URL(`${rootPath}/${href}` || "", baseUrl).pathname
+
         if (link && link in entriesObj) {
           // const linkUrl = URL.createObjectURL()
           entriesObj[link].getData?.(new BlobWriter()).then((blob) => {
@@ -69,51 +85,48 @@ const Frame = (props: FramePropsType) => {
           })
         }
       })
+
       if (frameDocument) {
+        const linkEle = frameDocument.createElement("link")
+        linkEle.href = linkUrl
+        linkEle.rel = "stylesheet"
+
+        frameDocument.head.appendChild(linkEle)
+
+        const containerClientWidth = frameRef.current.parentElement?.clientWidth
+
         const styleEle = frameDocument.createElement("style")
         styleEle.innerHTML = `
-          html, body {
-            margin: 0;
-            box-sizing: border-box;
-            max-width: 100% !important;
-            overflow: hidden;
+          * {
             white-space: wrap;
           }
-          
-          image, img  {
-            width: 200px  !important;
-            height: 200px  !important;
+          html, body {
+            margin: 0;
+            padding: 0;
           }
+        
+          html {
+            width: ${containerClientWidth}px;
+            height: 100vh;
 
-          svg  {
-            width: 300px !important;
-            height: 300px !important;
+            column-count: 2;
+            column-gap: 36px;
+            column-fill: auto;
+            column-rule-style: dotted;
           }
 
           body {
+            padding: 24px 12px;
             width: 100vw;
-            height: 100vh;
-            column-count: 2;
-            
-            column-fill: auto;
-            column-rule: dotted;
+            max-width: 100% !important;
+            box-sizing: border-box;
+            overflow-x: scroll;
           }
         `
         frameDocument.head.appendChild(styleEle)
-
-        setTimeout(() => {
-          if (frameRef.current) {
-            frameRef.current.width =
-              String(frameDocument.body.scrollWidth) || ""
-          }
-        }, 0)
-
-        // frameDocument.documentElement.style.width = String(
-        //   document.documentElement.clientWidth
-        // )
-        // String(frameDocument.body.scrollWidth) || ""
-        // frameDocument.body.style.width =
-        //   String(frameDocument.body.scrollWidth) || ""
+        const bodyScrollWidth = frameDocument.documentElement.scrollWidth
+        frameRef.current.width = String(bodyScrollWidth)
+        frameRef.current.setAttribute("class", "block h-screen shrink-0")
       }
     }
   }
@@ -123,7 +136,7 @@ const Frame = (props: FramePropsType) => {
       className="block w-full h-screen shrink-0"
       title={item.id}
       ref={frameRef}
-      onLoad={replaceLink}
+      onLoad={init}
     ></CustomIframe>
   )
   return portal ? createPortal(children, portal) : children
