@@ -38,9 +38,9 @@ const Frame = (props: FramePropsType) => {
   const { portal, item } = props
   const frameRef = useRef<HTMLIFrameElement>(null)
   // const [content, setContent] = useState()
-
+ 
   const {
-    data: { entriesObj, rootPath },
+    data: { entriesObj },
   } = useContext(ContentContext)
 
   useEffect(() => {
@@ -69,20 +69,21 @@ const Frame = (props: FramePropsType) => {
       const frameDocument = frameRef.current.contentDocument
       const elements = frameDocument?.querySelectorAll("img[src]")
       elements?.forEach((ele) => {
-        const href = ele.getAttribute("src")
-        const baseUrl = new URL(window.location.origin)
-        const link = new URL(`${rootPath}/${href}` || "", baseUrl).pathname
+        const href = ele.getAttribute("src") || ""
+        if (href) {
+          const link = href.replace("../", "")
+          const path = Object.keys(entriesObj).find((key) => key.includes(link))
 
-        if (link && link in entriesObj) {
-          // const linkUrl = URL.createObjectURL()
-          entriesObj[link].getData?.(new BlobWriter()).then((blob) => {
-            const file = new File([blob], item.id, {
-              type: link.replace(/.*\./, "image/"),
+          if (path && entriesObj[path]) {
+            entriesObj[path].getData?.(new BlobWriter()).then((blob) => {
+              const file = new File([blob], item.id, {
+                type: link.replace(/.*\./, "image/"),
+              })
+
+              const linkUrl = URL.createObjectURL(file)
+              ele.setAttribute("src", linkUrl)
             })
-
-            const linkUrl = URL.createObjectURL(file)
-            ele.setAttribute("src", linkUrl)
-          })
+          }
         }
       })
 
@@ -114,13 +115,20 @@ const Frame = (props: FramePropsType) => {
             column-fill: auto;
             column-rule-style: dotted;
           }
-
           body {
             padding: 24px 12px;
             width: 100vw;
             max-width: 100% !important;
             box-sizing: border-box;
             overflow-x: scroll;
+          }
+
+          svg {
+            max-width: 100% !important;
+            max-height: 100% !important;
+          }
+          svg > image {
+            max-height: 100% !important;
           }
         `
         frameDocument.head.appendChild(styleEle)
