@@ -1,7 +1,8 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Epub from "@/lib/epub"
 
 import Frame from "../Frame"
+import transform from "./transform"
 
 import {
   ContentContextProvider,
@@ -17,8 +18,12 @@ type MainProps = {
 }
 
 function Main(props: MainProps) {
-  const { epub, theme, portal  } = props
+  const { epub, theme, portal } = props
   const [themeConfig, setThemeConfig] = useState(theme) // eslint-disable-line
+
+  useEffect(() => {
+    transform(epub.getData().spine, epub.entriesObj)
+  }, [])
 
   const ele = (
     <ContentContextProvider
@@ -29,17 +34,16 @@ function Main(props: MainProps) {
     >
       <div
         className="absolute flex z-10 w-screen h-screen bg-white"
-        style={{ overflowX: 'scroll'}}
+        style={{ overflowX: "scroll" }}
       >
-        
-        {epub.getData().spine.map((spine, idx) => {
+        {/* {epub.getData().spine.map((spine, idx) => {
           return <Frame item={spine} key={idx} />
-        })} 
+        })}  */}
       </div>
     </ContentContextProvider>
   )
 
-  if(!portal) return ele
+  if (!portal) return ele
 
   return createPortal(ele, portal)
 }

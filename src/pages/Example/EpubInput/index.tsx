@@ -26,19 +26,21 @@ function EpubInput() {
 
   return (
     <>
-      {!books.length &&<Card className="my-4 min-w-96 bg-zinc-200 shadow shadow-white">
-        <CardHeader>
-          <CardTitle>
-            <Space>
-              <NotebookTabs />
-              epub
-            </Space>
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Input onChange={handleBooksChange} />
-        </CardContent>
-      </Card>}
+      {
+        <Card className="my-4 min-w-96 bg-zinc-200 shadow shadow-white">
+          <CardHeader>
+            <CardTitle>
+              <Space>
+                <NotebookTabs />
+                epub
+              </Space>
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Input onChange={handleBooksChange} />
+          </CardContent>
+        </Card>
+      }
 
       {books.length > 0 && books.map((book, idx) => book.render())}
     </>
