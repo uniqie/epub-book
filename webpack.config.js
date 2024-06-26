@@ -56,7 +56,8 @@ const config = {
     },
     static: "./dist",
     port: port,
-    open: "/#/home/epub",
+    open: "/home/epub",
+    historyApiFallback: true
   },
   module: {
     rules: [

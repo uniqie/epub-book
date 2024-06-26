@@ -1,11 +1,11 @@
-import { createHashRouter } from "react-router-dom"
+import { createBrowserRouter } from "react-router-dom"
 
 import Home from "@pages/Home"
 import Example from "@pages/Example"
 import Count from "@/pages/Example/Count"
 import EpubInput from "@pages/Example/EpubInput"
 
-const router = createHashRouter([
+const router = createBrowserRouter([
   {
     path: "/home",
     element: <Home />,

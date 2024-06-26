@@ -38,7 +38,7 @@ const Frame = (props: FramePropsType) => {
   const { portal, item } = props
   const frameRef = useRef<HTMLIFrameElement>(null)
   // const [content, setContent] = useState()
- 
+
   const {
     data: { entriesObj },
   } = useContext(ContentContext)
@@ -104,6 +104,7 @@ const Frame = (props: FramePropsType) => {
           html, body {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
           }
         
           html {
@@ -117,10 +118,15 @@ const Frame = (props: FramePropsType) => {
           }
           body {
             padding: 24px 12px;
+            paddingTop: 52px;
             width: 100vw;
             max-width: 100% !important;
             box-sizing: border-box;
             overflow-x: scroll;
+          }
+
+          img {
+            max-width: 100% !important;
           }
 
           svg {
@@ -132,9 +138,13 @@ const Frame = (props: FramePropsType) => {
           }
         `
         frameDocument.head.appendChild(styleEle)
-        const bodyScrollWidth = frameDocument.documentElement.scrollWidth
-        frameRef.current.width = String(bodyScrollWidth)
-        frameRef.current.setAttribute("class", "block h-screen shrink-0")
+
+        // settimeout(() => {
+        //   if (!frameRef.current) return
+        //   const bodyScrollWidth = frameDocument.documentElement.scrollWidth
+        //   frameRef.current.width = String(bodyScrollWidth)
+        //   frameRef.current.setAttribute("class", "block h-screen shrink-0")
+        // },)
       }
     }
   }

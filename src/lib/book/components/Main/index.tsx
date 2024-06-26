@@ -17,7 +17,7 @@ type MainProps = {
 }
 
 function Main(props: MainProps) {
-  const { epub, theme, portal  } = props
+  const { epub, theme, portal } = props
   const [themeConfig, setThemeConfig] = useState(theme) // eslint-disable-line
 
   const ele = (
@@ -29,17 +29,16 @@ function Main(props: MainProps) {
     >
       <div
         className="absolute flex z-10 w-screen h-screen bg-white"
-        style={{ overflowX: 'scroll'}}
+        style={{ overflowX: "scroll" }}
       >
-        
         {epub.getData().spine.map((spine, idx) => {
           return <Frame item={spine} key={idx} />
-        })} 
+        })}
       </div>
     </ContentContextProvider>
   )
 
-  if(!portal) return ele
+  if (!portal) return ele
 
   return createPortal(ele, portal)
 }
