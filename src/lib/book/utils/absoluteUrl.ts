@@ -8,6 +8,10 @@ function absoluteUrl(relativeUrl: string, base?: string) {
     const basePath = base.split("/") as string[]
     const relativePath = relativeUrl.split("/") as string[]
 
+    if (![".", "/"].includes(relativePath[0])) {
+      basePath.pop()
+    }
+
     basePath.concat(relativePath).forEach((str) => {
       if (str !== ".." && str !== ".") {
         urlPath.push(str)

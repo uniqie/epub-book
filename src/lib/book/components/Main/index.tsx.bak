@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react"
+import { useState } from "react"
 import Epub from "@/lib/epub"
 
 import Frame from "../Frame"
@@ -18,22 +18,10 @@ type MainProps = {
 }
 
 function Main(props: MainProps) {
-  const containerRef = useRef<HTMLDivElement>(null)
   const { epub, theme, portal } = props
   const [themeConfig, setThemeConfig] = useState(theme) // eslint-disable-line
 
-  const [pages, setPages] = useState<
-    [ReturnType<typeof epub.getData>["spine"][0], string][]
-  >([])
-
-  useEffect(() => {
-    if (containerRef.current) {
-      transform(epub, {
-        width: containerRef.current.clientWidth,
-        height: containerRef.current.clientHeight,
-      }).then(setPages)
-    }
-  }, [containerRef, epub])
+  transform(epub)
 
   const ele = (
     <ContentContextProvider
@@ -43,13 +31,12 @@ function Main(props: MainProps) {
       }}
     >
       <div
-        ref={containerRef}
-        className="absolute flex z-10 w-screen h-screen bg-white overflow-x-scroll"
+        className="absolute flex z-10 w-screen h-screen bg-white"
+        style={{ overflowX: "scroll" }}
       >
-        {pages?.length > 0 &&
-          pages?.map(([item, page], idx) => {
-            return <Frame item={item} page={page} key={idx} />
-          })}
+        {epub.getData().spine.map((spine, idx) => {
+          return <Frame item={spine} key={idx} />
+        })}
       </div>
     </ContentContextProvider>
   )
