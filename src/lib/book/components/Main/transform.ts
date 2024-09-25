@@ -35,6 +35,10 @@ async function transform(
             const styleEle = document.createElement("style")
 
             styleEle.innerHTML = `
+              * {
+                overflow: visible !important;
+              }
+            
               html {
                 width: ${config.width}px;
                 height: ${config.height}px;
