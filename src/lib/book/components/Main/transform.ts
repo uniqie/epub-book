@@ -35,15 +35,6 @@ async function transform(
             const styleEle = document.createElement("style")
 
             styleEle.innerHTML = `
-              * {
-                white-space: wrap;
-              }
-              html, body {
-                margin: 0;
-                padding: 0;
-                box-sizing: border-box;
-              }
-            
               html {
                 width: ${config.width}px;
                 height: ${config.height}px;
@@ -87,13 +78,16 @@ async function transform(
                 let fullUrl = absoluteUrl(href, path)
 
                 if (fullUrl in entriesObj) {
+                  const suffix = fullUrl.replace(/.*\./, "")
+                  const type = suffix === "css" ? "text/css" : "image/" + suffix
+
                   return (
                     (await entriesObj[fullUrl]
                       .getData?.(new BlobWriter())
                       .then((blob) => {
                         return URL.createObjectURL(
                           new File([blob], entriesObj[fullUrl].filename, {
-                            type: fullUrl.replace(/.*\./, "image/"),
+                            type: type,
                           })
                         )
                       })) || ""

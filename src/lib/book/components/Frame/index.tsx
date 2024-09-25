@@ -38,6 +38,7 @@ const Frame = (props: FramePropsType) => {
 
   const children = (
     <CustomIframe
+      sandbox="allow-same-origin"
       className="block w-full h-screen shrink-0"
       title={item.id}
       ref={frameRef}
