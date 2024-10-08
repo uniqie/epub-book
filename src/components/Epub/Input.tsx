@@ -35,8 +35,6 @@ const EpubInput = forwardRef<
     }
   })
 
-  // const getUnzipData = () => {}
-
   return (
     <Input
       ref={inputRef}

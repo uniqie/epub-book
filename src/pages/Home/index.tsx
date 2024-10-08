@@ -1,8 +1,6 @@
 import { Page } from "@/components/ui/page"
 import { Outlet } from "react-router-dom"
 
-// import Reader from "../Reader"
-
 function Home() {
   return (
     <Page className="bg-gradient-to-br from-light-dark	to-weight-dark w-100 h-100">
